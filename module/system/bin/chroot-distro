@@ -41,6 +41,8 @@ fi
 
 PROGRAM_VERSION="1.5.7"
 
+REPO_OWNER="ddCeka"
+
 PROGRAM_NAME=$(basename "$(realpath "$0")")
 
 TERMUX_ROOT_DIR=/data/data/com.termux
@@ -70,7 +72,7 @@ DEFAULT_PATH_ENV="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/
 BUSYBOXPATH="$(command -v busybox 2>/dev/null)"
 
 # variables to store distro information
-SUPPORTED_DISTRIBUTIONS="archlinux debian ubuntu kali"
+SUPPORTED_DISTRIBUTIONS="alpine archlinux debian fedora manjaro opensuse rockylinux ubuntu void kali trisquel"
 
 # JSON distro configuration paths
 DATA_DIR="${RUNTIME_DIR}/data"
@@ -2994,7 +2996,7 @@ command_unmount_help() {
 command_help() {
 	# JSON output mode
 	if [ "${JOSINIFY}" = "true" ]; then
-		printf '%s\n' "{\"program\":\"${PROGRAM_NAME}\",\"version\":\"${PROGRAM_VERSION}\",\"description\":\"A tool for managing chrooted Linux distributions.\",\"usage\":\"${PROGRAM_NAME} COMMAND [OPTIONS] [ARGUMENTS]\",\"commands\":[{\"name\":\"help\",\"description\":\"Show this help information.\"},{\"name\":\"install\",\"description\":\"Install a specified distribution.\"},{\"name\":\"list\",\"description\":\"List supported distributions and their installation status.\"},{\"name\":\"list-running\",\"description\":\"List currently running/mounted distributions.\"},{\"name\":\"login\",\"description\":\"Start login shell for the specified distribution.\"},{\"name\":\"remove\",\"description\":\"Delete a specified distribution.\"},{\"name\":\"clear-cache\",\"description\":\"Clear cache of downloaded files.\"}],\"runtime_dir\":\"${RUNTIME_DIR}\"}"
+		printf '%s\n' "{\"program\":\"${PROGRAM_NAME}\",\"version\":\"${PROGRAM_VERSION}\",\"maintainer\":\"@${REPO_OWNER}\",\"description\":\"A tool for managing chrooted Linux distributions.\",\"usage\":\"${PROGRAM_NAME} COMMAND [OPTIONS] [ARGUMENTS]\",\"commands\":[{\"name\":\"help\",\"description\":\"Show this help information.\"},{\"name\":\"install\",\"description\":\"Install a specified distribution.\"},{\"name\":\"list\",\"description\":\"List supported distributions and their installation status.\"},{\"name\":\"list-running\",\"description\":\"List currently running/mounted distributions.\"},{\"name\":\"login\",\"description\":\"Start login shell for the specified distribution.\"},{\"name\":\"remove\",\"description\":\"Delete a specified distribution.\"},{\"name\":\"clear-cache\",\"description\":\"Clear cache of downloaded files.\"}],\"runtime_dir\":\"${RUNTIME_DIR}\"}"
 		return 0
 	fi
 
@@ -3051,12 +3053,12 @@ command_help() {
 show_version() {
 	# JSON output mode
 	if [ "${JOSINIFY}" = "true" ]; then
-		printf '%s\n' "{\"program\":\"${PROGRAM_NAME}\",\"version\":\"${PROGRAM_VERSION}\"}"
+		printf '%s\n' "{\"program\":\"${PROGRAM_NAME}\",\"version\":\"${PROGRAM_VERSION}\",\"maintainer\":\"@${REPO_OWNER}\"}"
 		return 0
 	fi
 
 	# Normal human-readable output
-	msg "${CYAN}${PROGRAM_NAME} v${PROGRAM_VERSION}.${RST}"
+	msg "${CYAN}${PROGRAM_NAME} v${PROGRAM_VERSION} by @${REPO_OWNER}.${RST}"
 }
 
 #############################################################################

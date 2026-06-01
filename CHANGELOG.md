@@ -2,6 +2,16 @@
 
 ### v1.5.7
 
+- Merge pull request #4 from ddCeka/dependabot/github_actions/actions/upload-artifact-7
+- Merge pull request #3 from ddCeka/dependabot/github_actions/peter-evans/create-pull-request-8
+- Merge pull request #2 from ddCeka/dependabot/github_actions/actions/checkout-6
+- Merge pull request #1 from ddCeka/dependabot/github_actions/actions/download-artifact-8
+- Merge pull request #6 from ddCeka/dependabot/npm_and_yarn/webui/vite-8.0.14
+- Merge pull request #5 from ddCeka/dependabot/npm_and_yarn/webui/kernelsu-3.0.2
+- eol of magisk module
+
+### v1.5.7
+
 - end of life of magisk module, upstream changed to [python package](https://github.com/sabamdarif/chroot-distro)
 
 ### v1.5.6

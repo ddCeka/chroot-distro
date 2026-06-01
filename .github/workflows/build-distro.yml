@@ -2,7 +2,7 @@ name: build distro
 
 on:
     push:
-        branches: [main]
+        branches: [master]
     pull_request:
         paths:
             - ".github/workflows/build-distro.yml"
@@ -26,7 +26,7 @@ env:
     # Architectures to skip (space-separated, passed to bootstrap-rootfs.sh)
     SKIP_ARCHS: "x86_64 i686 i386 riscv64"
     # Repository info for download URLs
-    REPO_OWNER: "sabamdarif"
+    REPO_OWNER: "ddCeka"
     REPO_NAME: "chroot-distro"
 
 jobs:

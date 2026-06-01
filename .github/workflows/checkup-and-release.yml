@@ -3,7 +3,7 @@ name: Checkup And Release
 on:
     push:
         branches:
-            - main
+            - master
         paths-ignore:
             - "distro-build/**"
             - ".github/workflows/build-distro.yml"
@@ -16,7 +16,7 @@ on:
             - ".gitignore"
     pull_request:
         branches:
-            - main
+            - master
         paths-ignore:
             - "distro-build/**"
             - ".github/workflows/build-distro.yml"
@@ -241,7 +241,7 @@ jobs:
                     "version": "${VERSION}",
                     "versionCode": ${VERSION_CODE},
                     "zipUrl": "https://github.com/${{ github.repository }}/releases/download/${VERSION}/chroot-distro.zip",
-                    "changelog": "https://raw.githubusercontent.com/${{ github.repository }}/main/CHANGELOG.md"
+                    "changelog": "https://raw.githubusercontent.com/${{ github.repository }}/master/CHANGELOG.md"
                   }
                   EOF
 
@@ -292,7 +292,7 @@ jobs:
               run: |
                   VERSION="${{ steps.extract_version.outputs.version }}"
 
-                  git push --force-with-lease origin main
+                  git push --force-with-lease origin master
                   git push origin "${VERSION}"
 
                   echo "✅ Pushed changes and tag"
