@@ -1,0 +1,40 @@
+{
+  "distros": [
+    {
+      "name": "archlinux",
+      "version": "2026.04.01",
+      "supported_arch": [
+        "aarch64"
+      ],
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/distro/archlinux-aarch64-2026.04.01.tar.xz",
+      "arm_url": ""
+    },
+    {
+      "name": "debian",
+      "version": "13.4",
+      "supported_arch": [
+        "aarch64"
+      ],
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/distro/debian-aarch64-13.4.tar.xz",
+      "arm_url": ""
+    },
+    {
+      "name": "kali",
+      "version": "2026.1",
+      "supported_arch": [
+        "aarch64"
+      ],
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/distro/kali-aarch64-2026.1.tar.xz",
+      "arm_url": ""
+    },
+    {
+      "name": "ubuntu",
+      "version": "25.10",
+      "supported_arch": [
+        "aarch64"
+      ],
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/distro/ubuntu-aarch64-25.10.tar.xz",
+      "arm_url": ""
+    }
+  ]
+}

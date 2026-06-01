@@ -1,0 +1,7 @@
+id=chroot-distro
+name=chroot-distro
+version=1.5.7
+versionCode=34
+author=@ddCeka
+description=Install Gnu/Linux distributions on Android
+updateJson=https://raw.githubusercontent.com/ddCeka/chroot-distro/refs/heads/master/module/update.json
