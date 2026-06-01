@@ -65,6 +65,6 @@ jobs:
 
                       This PR updates the distro version in `${{ matrix.update.file }}`.
                   branch: "update/${{ matrix.update.name }}/${{ matrix.update.new }}"
-                  base: main
+                  base: master
                   delete-branch: true
                   signoff: true
