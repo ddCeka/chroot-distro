@@ -1,7 +1,7 @@
 
 ## Note
 
-this is a personal fork for personal use, as well as backup from before the original source changed into python package.
+#### this is a personal fork for personal use, as well as backup from before the original source changed into python package.
 
 > [!TIP]
 > you may want to find the [original](https://github.com/sabamdarif/chroot-distro) source instead.
@@ -11,8 +11,6 @@ this is a personal fork for personal use, as well as backup from before the orig
 # Chroot Distro
 
 #### Install Linux distributions on Android devices using chroot
-
-![Release](https://img.shields.io/github/v/release/ddCeka/chroot-distro?style=for-the-badge&color=blueviolet) ![GitHub License](https://img.shields.io/github/license/ddCeka/chroot-distro?style=for-the-badge)
 
 </div>
 
@@ -29,13 +27,12 @@ this is a personal fork for personal use, as well as backup from before the orig
 
 ## Supported Distributions
 
-- ![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)
-
-- ![Debian](https://img.shields.io/badge/Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white)
-
-- ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
-
-- ![Kali Linux](https://img.shields.io/badge/Kali_Linux-557C94?style=for-the-badge&logo=kali-linux&logoColor=white)
+|                                                                                                                         |                                                                                                                      |                                                                                                          |
+| :---------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: |
+| ![Alpine Linux](https://img.shields.io/badge/Alpine_Linux-0D597F?style=for-the-badge&logo=alpine-linux&logoColor=white) |  ![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)   |  ![Debian](https://img.shields.io/badge/Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white)   |
+|          ![Fedora](https://img.shields.io/badge/Fedora-51A2DA?style=for-the-badge&logo=fedora&logoColor=white)          |  ![Kali Linux](https://img.shields.io/badge/Kali_Linux-557C94?style=for-the-badge&logo=kali-linux&logoColor=white)   | ![Manjaro](https://img.shields.io/badge/Manjaro-35BF5C?style=for-the-badge&logo=manjaro&logoColor=white) |
+|       ![OpenSUSE](https://img.shields.io/badge/OpenSUSE-73BA25?style=for-the-badge&logo=opensuse&logoColor=white)       | ![Rocky Linux](https://img.shields.io/badge/Rocky_Linux-10B981?style=for-the-badge&logo=rocky-linux&logoColor=white) |  ![Trisquel](https://img.shields.io/badge/Trisquel-0D597F?style=for-the-badge&logo=gnu&logoColor=white)  |
+|          ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)          |  ![Void Linux](https://img.shields.io/badge/Void_Linux-478061?style=for-the-badge&logo=void-linux&logoColor=white)   |                                                                                                          |
 
 ---
 
