@@ -120,7 +120,7 @@ msg() {
 get_mount_tracker_file() {
 	distro_name="$1"
 	if [ -z "$distro_name" ]; then
-		msg "${BRED}Error: get_mount_tracker_file() called without distro_name${RST}"
+		msg "${BRED} ERROR: get_mount_tracker_file() called without distro_name${RST}"
 		return 1
 	fi
 	busybox echo "${MOUNT_DIR}/${distro_name}/mount.points"
@@ -189,7 +189,7 @@ update_description() {
 				if [ -z "$distro_details" ]; then
 					distro_details="📦 ${_distro_name}: ${session_text}"
 				else
-					distro_details="${distro_details} \\n 📦 ${_distro_name}: ${session_text}"
+					distro_details="${distro_details} | 📦 ${_distro_name}: ${session_text}"
 				fi
 			fi
 		done
@@ -198,9 +198,9 @@ update_description() {
 		string="Status: No distros installed 📦"
 	elif [ $mounted_count -eq 0 ]; then
 		if [ $installed_count -eq 1 ]; then
-			string="Status: ${installed_count} distro installed, none active 💤 \\n Installed: ${installed_distros}"
+			string="Status: ${installed_count} distro installed, none active 💤 | Installed: ${installed_distros}"
 		else
-			string="Status: ${installed_count} distros installed, none active 💤 \\n Installed: ${installed_distros}"
+			string="Status: ${installed_count} distros installed, none active 💤 | Installed: ${installed_distros}"
 		fi
 	else
 		if [ $mounted_count -eq 1 ]; then
@@ -208,7 +208,7 @@ update_description() {
 		else
 			main_status="Status: ${mounted_count}/${installed_count} are activated 🚀 | Mounted: ${mounted_distros}"
 		fi
-		string="${main_status} \\n ${distro_details}"
+		string="${main_status} | ${distro_details}"
 	fi
 	if ! grep -q "^id=" "$PROP_FILE"; then
 		[ -f "$PROP_BAK" ] && cp "$PROP_BAK" "$PROP_FILE"
@@ -228,7 +228,7 @@ update_description() {
 get_session_file() {
 	distro_name="$1"
 	if [ -z "$distro_name" ]; then
-		msg "${BRED}Error: get_session_file() called without distro_name${RST}"
+		msg "${BRED} ERROR: get_session_file() called without distro_name${RST}"
 		return 1
 	fi
 	busybox echo "${RUNTIME_DIR}/data/${distro_name}/sessions"
@@ -246,7 +246,7 @@ get_session_file() {
 increment_session() {
 	distro_name="$1"
 	if [ -z "$distro_name" ]; then
-		msg "${BRED}Error: increment_session() called without distro_name${RST}"
+		msg "${BRED} ERROR: increment_session() called without distro_name${RST}"
 		return 1
 	fi
 
@@ -266,9 +266,7 @@ increment_session() {
 
 	# Increment and save
 	new_count=$((current_count + 1))
-	busybox echo "$new_count" >"$session_file"
-	# msg "${BLUE}[${GREEN}*${BLUE}] ${CYAN}Active sessions for ${distro_name}: ${new_count}${RST}"
-
+	busybox echo "$new_count" >>"$session_file"
 	# Update module description
 	update_description
 }
@@ -285,7 +283,7 @@ increment_session() {
 decrement_session() {
 	distro_name="$1"
 	if [ -z "$distro_name" ]; then
-		msg "${BRED}Error: decrement_session() called without distro_name${RST}"
+		msg "${BRED} ERROR: decrement_session() called without distro_name${RST}"
 		return 1
 	fi
 
@@ -293,7 +291,7 @@ decrement_session() {
 
 	# If session file doesn't exist, something went wrong
 	if [ ! -f "$session_file" ]; then
-		msg "${YELLOW}Warning: session file not found for ${distro_name}${RST}"
+		msg "${YELLOW} WARNING: session file not found for ${distro_name}${RST}"
 		return 1
 	fi
 
@@ -313,9 +311,7 @@ decrement_session() {
 		return 0
 	else
 		new_count=$((current_count - 1))
-		busybox echo "$new_count" >"$session_file"
-		# msg "${BLUE}[${GREEN}*${BLUE}] ${CYAN}Active sessions for ${distro_name}: ${new_count}${RST}"
-
+		busybox echo "$new_count" >>"$session_file"
 		# Update module description
 		update_description
 		return 1
@@ -433,14 +429,14 @@ safe_mount() {
 			busybox mount -t "$fs_type" -o "$mount_opts" "$fs_type" "$dst" 2>/dev/null ||
 				command mount -t "$fs_type" -o "$mount_opts" "$fs_type" "$dst" 2>/dev/null ||
 				command mount -t "$fs_type" -o "$mount_opts" "none" "$dst" 2>/dev/null || {
-				msg "${YELLOW}Warning: failed to mount $fs_type filesystem to $dst${RST}"
+				msg "${YELLOW} WARNING: failed to mount $fs_type filesystem to $dst${RST}"
 				return 1
 			}
 		else
 			busybox mount -t "$fs_type" "$fs_type" "$dst" 2>/dev/null ||
 				command mount -t "$fs_type" "$fs_type" "$dst" 2>/dev/null ||
 				command mount -t "$fs_type" "none" "$dst" 2>/dev/null || {
-				msg "${YELLOW}Warning: failed to mount $fs_type filesystem to $dst${RST}"
+				msg "${YELLOW} WARNING: failed to mount $fs_type filesystem to $dst${RST}"
 				return 1
 			}
 		fi
@@ -458,7 +454,7 @@ safe_mount() {
 			busybox mount "$bind_opts" "$src" "$dst" 2>/dev/null ||
 				command mount "$bind_opts" "$src" "$dst" 2>/dev/null ||
 				command mount -o bind "$src" "$dst" 2>/dev/null || {
-				msg "${YELLOW}Warning: failed to mount $src to $dst${RST}"
+				msg "${YELLOW} WARNING: failed to mount $src to $dst${RST}"
 				return 1
 			}
 		else
@@ -847,7 +843,7 @@ chroot_distro_warn_if_unsupported_busybox() {
 check_if_running_as_root() {
 	user_id=$(busybox id -u)
 	if [ "${user_id}" -ne 0 ]; then
-		msg "${BRED}ERROE: This script requires root privileges. Please run it as root."
+		msg "${BRED} ERROR: This script requires root privileges. Please run it as root."
 		exit 1
 	fi
 	unset user_id
@@ -876,7 +872,7 @@ cleanup_profile() {
 run_chroot_cmd() {
 	if [ -z "${distro_name-}" ]; then
 		msg
-		msg "${BRED}Error: called run_chroot_cmd() but \${distro_name} is not set.${RST}"
+		msg "${BRED} ERROR: called run_chroot_cmd() but \${distro_name} is not set.${RST}"
 		msg
 		return 1
 	fi
@@ -886,7 +882,7 @@ run_chroot_cmd() {
 	# Check if distribution is installed
 	if [ ! -d "$distro_path" ]; then
 		msg
-		msg "${BRED}Error: distribution '${YELLOW}${distro_name}${BRED}' is not installed.${RST}"
+		msg "${BRED} ERROR: distribution '${YELLOW}${distro_name}${BRED}' is not installed.${RST}"
 		msg
 		return 1
 	fi
@@ -925,7 +921,7 @@ cleanup_all_mounts() {
 	distro_name="$1"
 
 	if [ -z "$distro_name" ]; then
-		msg "${YELLOW}Warning: cleanup_all_mounts() called without distro_name${RST}"
+		msg "${YELLOW} WARNING: cleanup_all_mounts() called without distro_name${RST}"
 		return 1
 	fi
 
@@ -953,8 +949,6 @@ cleanup_all_mounts() {
 #
 # FUNCTION TO INSTALL THE SPECIFIED DISTRIBUTION
 #
-#############################################################################
-
 #############################################################################
 #
 # FUNCTION TO DOWNLOAD FILE
@@ -1016,7 +1010,7 @@ command_install() {
 		--skip-useradd)
 			if [ -n "${prefilled_username:-}" ]; then
 				msg
-				msg "${BRED}Error: cannot use '--skip-useradd' and '--adduser' at the same time.${RST}"
+				msg "${BRED} ERROR: cannot use '--skip-useradd' and '--adduser' at the same time.${RST}"
 				command_install_help
 				return 1
 			fi
@@ -1025,7 +1019,7 @@ command_install() {
 		--adduser)
 			if [ "$skip_useradd" = "true" ]; then
 				msg
-				msg "${BRED}Error: cannot use '--skip-useradd' (or SKIP_USERADD=1) and '--adduser' at the same time.${RST}"
+				msg "${BRED} ERROR: cannot use '--skip-useradd' (or SKIP_USERADD=1) and '--adduser' at the same time.${RST}"
 				command_install_help
 				return 1
 			fi
@@ -1036,14 +1030,14 @@ command_install() {
 				shift 2
 			else
 				msg
-				msg "${BRED}Error: option '${YELLOW}--adduser${BRED}' requires USERNAME and PASSWORD arguments.${RST}"
+				msg "${BRED} ERROR: option '${YELLOW}--adduser${BRED}' requires USERNAME and PASSWORD arguments.${RST}"
 				command_install_help
 				return 1
 			fi
 			;;
 		-*)
 			msg
-			msg "${BRED}Error: got unknown option '${YELLOW}${1}${BRED}'.${RST}"
+			msg "${BRED} ERROR: got unknown option '${YELLOW}${1}${BRED}'.${RST}"
 			command_install_help
 			return 1
 			;;
@@ -1051,14 +1045,14 @@ command_install() {
 			if [ -z "${distro_name-}" ]; then
 				if [ -z "$1" ]; then
 					msg
-					msg "${BRED}Error: distribution alias argument should not be empty.${RST}"
+					msg "${BRED} ERROR: distribution alias argument should not be empty.${RST}"
 					command_install_help
 					return 1
 				fi
 				distro_name="$1"
 			else
 				msg
-				msg "${BRED}Error: got excessive positional argument '${YELLOW}${1}${BRED}'. Note that distribution can be specified only once.${RST}"
+				msg "${BRED} ERROR: got excessive positional argument '${YELLOW}${1}${BRED}'. Note that distribution can be specified only once.${RST}"
 				command_install_help
 				return 1
 			fi
@@ -1070,7 +1064,7 @@ command_install() {
 	# Check if distribution name is provided
 	if [ -z "$distro_name" ]; then
 		msg
-		msg "${BRED}Error: distribution alias is not specified.${RST}"
+		msg "${BRED} ERROR: distribution alias is not specified.${RST}"
 		command_install_help
 		return 1
 	fi
@@ -1092,7 +1086,7 @@ command_install() {
 
 	if [ "$distro_found" = "false" ]; then
 		msg
-		msg "${BRED}Error: unknown distribution '${YELLOW}${distro_name}${BRED}'.${RST}"
+		msg "${BRED} ERROR: unknown distribution '${YELLOW}${distro_name}${BRED}'.${RST}"
 		msg
 		msg "${CYAN}Run '${GREEN}${PROGRAM_NAME} list${CYAN}' to see available distributions.${RST}"
 		msg
@@ -1114,7 +1108,7 @@ command_install() {
 
 	if [ "$arch_supported" = "false" ]; then
 		msg
-		msg "${BRED}Error: distribution '${YELLOW}${distro_name}${BRED}' is not supported on '${YELLOW}${current_arch}${BRED}' architecture.${RST}"
+		msg "${BRED} ERROR: distribution '${YELLOW}${distro_name}${BRED}' is not supported on '${YELLOW}${current_arch}${BRED}' architecture.${RST}"
 		msg
 		msg "${CYAN}Supported architectures for ${distro_name}: ${YELLOW}${supported_archs}${RST}"
 		msg
@@ -1131,7 +1125,7 @@ command_install() {
 		;;
 	*)
 		msg
-		msg "${BRED}Error: unsupported architecture '${YELLOW}${current_arch}${BRED}'.${RST}"
+		msg "${BRED} ERROR: unsupported architecture '${YELLOW}${current_arch}${BRED}'.${RST}"
 		return 1
 		;;
 	esac
@@ -1139,7 +1133,7 @@ command_install() {
 	# Check if URL is available
 	if [ -z "$TARBALL_URL" ]; then
 		msg
-		msg "${BRED}Error: no download URL available for '${YELLOW}${distro_name}${BRED}' on '${YELLOW}${current_arch}${BRED}' architecture.${RST}"
+		msg "${BRED} ERROR: no download URL available for '${YELLOW}${distro_name}${BRED}' on '${YELLOW}${current_arch}${BRED}' architecture.${RST}"
 		return 1
 	fi
 
@@ -1152,7 +1146,7 @@ command_install() {
 		if [ -e "${INSTALLED_ROOTFS_DIR:?}/${distro_name:?}/etc" ]; then
 			# Valid installation exists
 			msg
-			msg "${BRED}Error: distribution '${YELLOW}${distro_name}${BRED}' is already installed.${RST}"
+			msg "${BRED} ERROR: distribution '${YELLOW}${distro_name}${BRED}' is already installed.${RST}"
 			msg
 			msg "${CYAN}Log in:     ${GREEN}${PROGRAM_NAME} login ${distro_name}${RST}"
 			msg "${CYAN}Uninstall:  ${GREEN}${PROGRAM_NAME} remove ${distro_name}${RST}"
@@ -1239,7 +1233,7 @@ command_install() {
 	# high grade of customization and doesn't respect FHS standard.
 	if [ ! -e "${INSTALLED_ROOTFS_DIR:?}/${distro_name:?}/etc" ]; then
 		msg
-		msg "${BRED}Error: the rootfs of distribution '${YELLOW}${distro_name}${BRED}' has unexpected structure (no /etc directory). ${RST}"
+		msg "${BRED} ERROR: the rootfs of distribution '${YELLOW}${distro_name}${BRED}' has unexpected structure (no /etc directory). ${RST}"
 		msg
 		cleanup_failed_installation "$distro_name"
 		return 1
@@ -1541,7 +1535,7 @@ command_install() {
 		msg "${BLUE}[${GREEN}*${BLUE}] ${CYAN}Running distribution-specific configuration steps...${RST}"
 		(
 			cd "${INSTALLED_ROOTFS_DIR}/${distro_name}" || {
-				msg "${BRED}Error: directory doesn't exist${RST}"
+				msg "${BRED} ERROR: directory doesn't exist${RST}"
 				exit 1
 			}
 			distro_setup
@@ -1644,9 +1638,9 @@ configure_flatpak_runtime() {
 
 	# Check if setuid bit is set
 	if [ ! -u "$bwrap_path" ]; then
-		msg "${YELLOW}Warning: bwrap (Flatpak) does not have setuid bit set.${RST}"
+		msg "${YELLOW} WARNING: bwrap (Flatpak) does not have setuid bit set.${RST}"
 		msg "${CYAN}Setting setuid bit on $bwrap_path to fix namespace issues...${RST}"
-		busybox chmod u+s "$bwrap_path" 2>/dev/null || msg "${BRED}Error: failed to set setuid on bwrap.${RST}"
+		busybox chmod u+s "$bwrap_path" 2>/dev/null || msg "${BRED} ERROR: failed to set setuid on bwrap.${RST}"
 	fi
 }
 
@@ -1685,7 +1679,7 @@ command_login() {
 			# The option '--isolated' is not compatible with any share bind
 			if [ "$use_termux_home" = "true" ] || [ "$make_termux_tmp_shared" = "true" ] || [ -n "$custom_fs_bindings" ] || [ -n "$login_wd" ]; then
 				msg
-				msg "${BRED}Error: option '${YELLOW}--isolated${BRED}' cannot be used with '${YELLOW}--bind${BRED}', '${YELLOW}--work-dir${BRED}', '${YELLOW}--shared-tmp${BRED}' or '${YELLOW}--termux-home${BRED}'${RST}"
+				msg "${BRED} ERROR: option '${YELLOW}--isolated${BRED}' cannot be used with '${YELLOW}--bind${BRED}', '${YELLOW}--work-dir${BRED}', '${YELLOW}--shared-tmp${BRED}' or '${YELLOW}--termux-home${BRED}'${RST}"
 				command_login_help
 				return 1
 			fi
@@ -1695,7 +1689,7 @@ command_login() {
 			# The option '--termux-home' is not compatible with '--isolated'
 			if [ "$make_distro_isolated" = "true" ]; then
 				msg
-				msg "${BRED}Error: option '${YELLOW}--termux-home${BRED}' can not be used '${YELLOW}--isolated${BRED}'${RST}"
+				msg "${BRED} ERROR: option '${YELLOW}--termux-home${BRED}' can not be used '${YELLOW}--isolated${BRED}'${RST}"
 				command_login_help
 				return 1
 			fi
@@ -1705,7 +1699,7 @@ command_login() {
 			# The option '--shared-tmp' is not compatible with '--isolated'
 			if [ "$make_distro_isolated" = "true" ]; then
 				msg
-				msg "${BRED}Error: option '${YELLOW}--shared-tmp${BRED}' can not be used '${YELLOW}--isolated${BRED}'${RST}"
+				msg "${BRED} ERROR: option '${YELLOW}--shared-tmp${BRED}' can not be used '${YELLOW}--isolated${BRED}'${RST}"
 				command_login_help
 				return 1
 			fi
@@ -1714,7 +1708,7 @@ command_login() {
 		--bind)
 			if [ "$make_distro_isolated" = "true" ]; then
 				msg
-				msg "${BRED}Error: option '${YELLOW}--bind${BRED}' can not be used '${YELLOW}--isolated${BRED}'${RST}"
+				msg "${BRED} ERROR: option '${YELLOW}--bind${BRED}' can not be used '${YELLOW}--isolated${BRED}'${RST}"
 				command_login_help
 				return 1
 			elif [ $# -ge 2 ]; then
@@ -1722,7 +1716,7 @@ command_login() {
 
 				if [ -z "$1" ]; then
 					msg
-					msg "${BRED}Error: argument to option '${YELLOW}--bind${BRED}' should not be empty.${RST}"
+					msg "${BRED} ERROR: argument to option '${YELLOW}--bind${BRED}' should not be empty.${RST}"
 					command_login_help
 					return 1
 				fi
@@ -1734,7 +1728,7 @@ command_login() {
 				fi
 			else
 				msg
-				msg "${BRED}Error: option '${YELLOW}--bind${BRED}' requires an argument.${RST}"
+				msg "${BRED} ERROR: option '${YELLOW}--bind${BRED}' requires an argument.${RST}"
 				command_login_help
 				return 1
 			fi
@@ -1745,7 +1739,7 @@ command_login() {
 
 				if [ -z "$1" ]; then
 					msg
-					msg "${BRED}Error: argument to option '${YELLOW}--user${BRED}' should not be empty.${RST}"
+					msg "${BRED} ERROR: argument to option '${YELLOW}--user${BRED}' should not be empty.${RST}"
 					command_login_help
 					return 1
 				fi
@@ -1753,7 +1747,7 @@ command_login() {
 				login_user="$1"
 			else
 				msg
-				msg "${BRED}Error: option '${YELLOW}--user${BRED}' requires an argument.${RST}"
+				msg "${BRED} ERROR: option '${YELLOW}--user${BRED}' requires an argument.${RST}"
 				command_login_help
 				return 1
 			fi
@@ -1761,7 +1755,7 @@ command_login() {
 		--work-dir)
 			if [ "$make_distro_isolated" = "true" ]; then
 				msg
-				msg "${BRED}Error: option '${YELLOW}--work-dir${BRED}' can not be used '${YELLOW}--isolated${BRED}'${RST}"
+				msg "${BRED} ERROR: option '${YELLOW}--work-dir${BRED}' can not be used '${YELLOW}--isolated${BRED}'${RST}"
 				command_login_help
 				return 1
 			elif [ $# -ge 2 ]; then
@@ -1769,7 +1763,7 @@ command_login() {
 
 				if [ -z "$1" ]; then
 					msg
-					msg "${BRED}Error: argument to option '${YELLOW}--work-dir${BRED}' should not be empty.${RST}"
+					msg "${BRED} ERROR: argument to option '${YELLOW}--work-dir${BRED}' should not be empty.${RST}"
 					command_login_help
 					return 1
 				fi
@@ -1777,7 +1771,7 @@ command_login() {
 				login_wd="$1"
 			else
 				msg
-				msg "${BRED}Error: option '${YELLOW}--work-dir${BRED}' requires an argument.${RST}"
+				msg "${BRED} ERROR: option '${YELLOW}--work-dir${BRED}' requires an argument.${RST}"
 				command_login_help
 				return 1
 			fi
@@ -1788,7 +1782,7 @@ command_login() {
 
 				if [ -z "$1" ]; then
 					msg
-					msg "${BRED}Error: argument to option '${YELLOW}--env${BRED}' should not be empty.${RST}"
+					msg "${BRED} ERROR: argument to option '${YELLOW}--env${BRED}' should not be empty.${RST}"
 					command_login_help
 					return 1
 				fi
@@ -1797,14 +1791,14 @@ command_login() {
 				login_env_vars="$login_env_vars $1"
 			else
 				msg
-				msg "${BRED}Error: option '${YELLOW}--env${BRED}' requires an argument.${RST}"
+				msg "${BRED} ERROR: option '${YELLOW}--env${BRED}' requires an argument.${RST}"
 				command_login_help
 				return 1
 			fi
 			;;
 		-*)
 			msg
-			msg "${BRED}Error: got unknown option '${YELLOW}${1}${BRED}'.${RST}"
+			msg "${BRED} ERROR: got unknown option '${YELLOW}${1}${BRED}'.${RST}"
 			command_login_help
 			return 1
 			;;
@@ -1812,14 +1806,14 @@ command_login() {
 			if [ -z "$distro_name" ]; then
 				if [ -z "$1" ]; then
 					msg
-					msg "${BRED}Error: distribution alias argument should not be empty.${RST}"
+					msg "${BRED} ERROR: distribution alias argument should not be empty.${RST}"
 					command_login_help
 					return 1
 				fi
 				distro_name="$1"
 			else
 				msg
-				msg "${BRED}Error: got excessive positional argument '${YELLOW}${1}${BRED}'. Note that distribution can be specified only once.${RST}"
+				msg "${BRED} ERROR: got excessive positional argument '${YELLOW}${1}${BRED}'. Note that distribution can be specified only once.${RST}"
 				command_login_help
 				return 1
 			fi
@@ -1830,7 +1824,7 @@ command_login() {
 
 	if [ -z "$distro_name" ]; then
 		msg
-		msg "${BRED}Error: distribution alias is not specified.${RST}"
+		msg "${BRED} ERROR: distribution alias is not specified.${RST}"
 		command_login_help
 		return 1
 	fi
@@ -1860,7 +1854,7 @@ command_login() {
 			fi
 		else
 			msg
-			msg "${BRED}Error: unknown distribution '${YELLOW}${distro_name}${BRED}'.${RST}"
+			msg "${BRED} ERROR: unknown distribution '${YELLOW}${distro_name}${BRED}'.${RST}"
 			msg
 			msg "${CYAN}Run '${GREEN}${PROGRAM_NAME} list${CYAN}' to see available distributions.${RST}"
 			msg
@@ -1869,30 +1863,30 @@ command_login() {
 	fi
 
 	if [ ! -e "${INSTALLED_ROOTFS_DIR}/${distro_name}/etc/passwd" ]; then
-		msg "${BRED}Error: the selected distribution doesn't have /etc/passwd.${RST}"
+		msg "${BRED} ERROR: the selected distribution doesn't have /etc/passwd.${RST}"
 		return 1
 	fi
 
 	# Catch invalid specified user before login command will be executed.
 	if ! busybox grep -q "^${login_user}:" "${INSTALLED_ROOTFS_DIR}/${distro_name}/etc/passwd" >/dev/null 2>&1; then
-		msg "${BRED}Error: no user '${YELLOW}${login_user}${BRED}' defined in /etc/passwd of distribution.${RST}"
+		msg "${BRED} ERROR: no user '${YELLOW}${login_user}${BRED}' defined in /etc/passwd of distribution.${RST}"
 		return 1
 	fi
 
 	# Extract user information from /etc/passwd
 	login_uid=$(busybox grep "^${login_user}:" "${INSTALLED_ROOTFS_DIR}/${distro_name}/etc/passwd" | busybox cut -d ':' -f 3)
 	if [ -z "${login_uid}" ]; then
-		msg "${BRED}Error: failed to retrieve the id of user '${YELLOW}${login_user}${BRED}' from /etc/passwd of distribution.${RST}"
+		msg "${BRED} ERROR: failed to retrieve the id of user '${YELLOW}${login_user}${BRED}' from /etc/passwd of distribution.${RST}"
 		return 1
 	fi
 	login_gid=$(busybox grep "^${login_user}:" "${INSTALLED_ROOTFS_DIR}/${distro_name}/etc/passwd" | busybox cut -d ':' -f 4)
 	if [ -z "${login_gid}" ]; then
-		msg "${BRED}Error: failed to retrieve the primary group id of user '${YELLOW}${login_user}${BRED}' from /etc/passwd of distribution.${RST}"
+		msg "${BRED} ERROR: failed to retrieve the primary group id of user '${YELLOW}${login_user}${BRED}' from /etc/passwd of distribution.${RST}"
 		return 1
 	fi
 	login_home=$(busybox grep "^${login_user}:" "${INSTALLED_ROOTFS_DIR}/${distro_name}/etc/passwd" | busybox cut -d ':' -f 6)
 	if [ -z "$login_home" ]; then
-		msg "${BRED}Error: failed to retrieve the home of user '${YELLOW}${login_user}${BRED}' from /etc/passwd of distribution.${RST}"
+		msg "${BRED} ERROR: failed to retrieve the home of user '${YELLOW}${login_user}${BRED}' from /etc/passwd of distribution.${RST}"
 		return 1
 	fi
 	if [ -z "$login_wd" ]; then
@@ -1900,7 +1894,7 @@ command_login() {
 	fi
 	login_shell=$(busybox grep "^${login_user}:" "${INSTALLED_ROOTFS_DIR}/${distro_name}/etc/passwd" | busybox cut -d ':' -f 7)
 	if [ -z "$login_shell" ]; then
-		msg "${BRED}Error: failed to retrieve the shell of user '${YELLOW}${login_user}${BRED}' from /etc/passwd of distribution.${RST}"
+		msg "${BRED} ERROR: failed to retrieve the shell of user '${YELLOW}${login_user}${BRED}' from /etc/passwd of distribution.${RST}"
 		return 1
 	fi
 
@@ -1944,7 +1938,7 @@ command_login() {
 	current_perms=$(busybox stat -c "%a" "/dev/shm" 2>/dev/null)
 	if [ "$current_perms" != "1777" ]; then
 		chmod 1777 "/dev/shm" 2>/dev/null || {
-			msg "${YELLOW}Warning: could not set proper permissions on /dev/shm${RST}"
+			msg "${YELLOW} WARNING: could not set proper permissions on /dev/shm${RST}"
 		}
 	fi
 	unset current_perms
@@ -2083,11 +2077,11 @@ command_login() {
 
 			if [ -n "$DEVICE_BLOCK" ]; then
 				busybox mount -o "$NEW_OPTS" "$DEVICE_BLOCK" /data 2>/dev/null || {
-					msg "${YELLOW}Warning: failed to enable SUID on /data (remount failed)${RST}"
+					msg "${YELLOW} WARNING: failed to enable SUID on /data (remount failed)${RST}"
 				}
 			else
 				busybox mount -o "$NEW_OPTS" /data 2>/dev/null || {
-					msg "${YELLOW}Warning: failed to enable SUID on /data (could not find device)${RST}"
+					msg "${YELLOW} WARNING: failed to enable SUID on /data (could not find device)${RST}"
 				}
 			fi
 			;;
@@ -2130,12 +2124,12 @@ command_login() {
 
 		safe_mount "${TERMUX_PREFIX}/tmp" "${INSTALLED_ROOTFS_DIR}/${distro_name}/tmp" "$distro_name"
 		busybox chmod 1777 "${TERMUX_PREFIX}/tmp" 2>/dev/null || {
-			msg "${YELLOW}Warning: could not set proper permissions on ${TERMUX_PREFIX}/tmp${RST}"
+			msg "${YELLOW} WARNING: could not set proper permissions on ${TERMUX_PREFIX}/tmp${RST}"
 		}
 
 		safe_mount "${TERMUX_HOME}" "${INSTALLED_ROOTFS_DIR}/${distro_name}/termux-home" "$distro_name"
 		busybox chmod -R 755 "${INSTALLED_ROOTFS_DIR}/${distro_name}/termux-home" || {
-			msg "${YELLOW}Warning: could not set proper permissions on ${TERMUX_HOME}${RST}"
+			msg "${YELLOW} WARNING: could not set proper permissions on ${TERMUX_HOME}${RST}"
 		}
 	else
 		if ! busybox mount | busybox grep -q " on ${INSTALLED_ROOTFS_DIR}/${distro_name}/tmp "; then
@@ -2146,10 +2140,10 @@ command_login() {
 				busybox echo "${INSTALLED_ROOTFS_DIR}/${distro_name}/tmp" >>"$mount_tracker_file"
 			else
 				safe_mount "/tmp" "${INSTALLED_ROOTFS_DIR}/${distro_name}/tmp" "$distro_name" 2>/dev/null || {
-					msg "${BRED}Error: failed to mount /tmp filesystem${RST}"
+					msg "${BRED} ERROR: failed to mount /tmp filesystem${RST}"
 				}
 				busybox chmod 1777 "/tmp" 2>/dev/null || {
-					msg "${YELLOW}Warning: could not set proper permissions on /tmp${RST}"
+					msg "${YELLOW} WARNING: could not set proper permissions on /tmp${RST}"
 				}
 			fi
 		fi
@@ -2213,7 +2207,7 @@ command_login() {
 				busybox cp "${MODDIR}/tools/serviced.py" "${INSTALLED_ROOTFS_DIR}/${distro_name}/bin/serviced"
 				busybox chmod +x "${INSTALLED_ROOTFS_DIR}/${distro_name}/bin/serviced"
 			else
-				msg "${YELLOW}Warning: serviced source not found at ${MODDIR}/tools/serviced.py, skipping auto-install${RST}"
+				msg "${YELLOW} WARNING: serviced source not found at ${MODDIR}/tools/serviced.py, skipping auto-install${RST}"
 			fi
 		fi
 
@@ -2224,7 +2218,7 @@ command_login() {
 				run_chroot_cmd /bin/serviced start
 			fi
 		else
-			msg "${YELLOW}Warning: serviced not found at /bin/serviced, skipping service start${RST}"
+			msg "${YELLOW} WARNING: serviced not found at /bin/serviced, skipping service start${RST}"
 		fi
 	fi
 
@@ -2512,13 +2506,13 @@ command_clear_cache() {
 			;;
 		-*)
 			msg
-			msg "${BRED}Error: got unknown option '${YELLOW}${1}${BRED}'.${RST}"
+			msg "${BRED} ERROR: got unknown option '${YELLOW}${1}${BRED}'.${RST}"
 			command_clear_cache_help
 			return 1
 			;;
 		*)
 			msg
-			msg "${BRED}Error: got excessive positional argument '${YELLOW}${1}${BRED}'. Note that tarball file path can be specified only once.${RST}"
+			msg "${BRED} ERROR: got excessive positional argument '${YELLOW}${1}${BRED}'. Note that tarball file path can be specified only once.${RST}"
 			command_clear_cache_help
 			return 1
 			;;
@@ -2593,7 +2587,7 @@ command_remove() {
 			;;
 		-*)
 			msg
-			msg "${BRED}Error: got unknown option '${YELLOW}${1}${BRED}'.${RST}"
+			msg "${BRED} ERROR: got unknown option '${YELLOW}${1}${BRED}'.${RST}"
 			command_remove_help
 			return 1
 			;;
@@ -2601,14 +2595,14 @@ command_remove() {
 			if [ -z "${distro_name}" ]; then
 				if [ -z "$1" ]; then
 					msg
-					msg "${BRED}Error: distribution alias argument should not be empty.${RST}"
+					msg "${BRED} ERROR: distribution alias argument should not be empty.${RST}"
 					command_remove_help
 					return 1
 				fi
 				distro_name="$1"
 			else
 				msg
-				msg "${BRED}Error: got excessive positional argument '${YELLOW}${1}${BRED}'. Note that distribution can be specified only once.${RST}"
+				msg "${BRED} ERROR: got excessive positional argument '${YELLOW}${1}${BRED}'. Note that distribution can be specified only once.${RST}"
 				command_remove_help
 				return 1
 			fi
@@ -2619,7 +2613,7 @@ command_remove() {
 
 	if [ -z "${distro_name}" ]; then
 		msg
-		msg "${BRED}Error: distribution alias is not specified.${RST}"
+		msg "${BRED} ERROR: distribution alias is not specified.${RST}"
 		command_remove_help
 		return 1
 	fi
@@ -2635,7 +2629,7 @@ command_remove() {
 
 	if [ "$distro_found" = "false" ]; then
 		msg
-		msg "${BRED}Error: unknown distribution '${YELLOW}${distro_name}${BRED}' was requested to be removed.${RST}"
+		msg "${BRED} ERROR: unknown distribution '${YELLOW}${distro_name}${BRED}' was requested to be removed.${RST}"
 		msg
 		msg "${CYAN}View supported distributions by: ${GREEN}${PROGRAM_NAME} list${RST}"
 		msg
@@ -2644,7 +2638,7 @@ command_remove() {
 
 	if [ ! -d "${INSTALLED_ROOTFS_DIR}/${distro_name}" ]; then
 		msg
-		msg "${BRED}Error: distribution '${YELLOW}${distro_name}${BRED}' is not installed.${RST}"
+		msg "${BRED} ERROR: distribution '${YELLOW}${distro_name}${BRED}' is not installed.${RST}"
 		msg
 		return 1
 	fi
@@ -2664,7 +2658,7 @@ command_remove() {
 	' /proc/mounts 2>/dev/null)
 
 	if [ -n "$remaining_mounts" ]; then
-		msg "${BRED}Error: Cannot safely remove '${YELLOW}${distro_name}${BRED}' - mount points still active!${RST}"
+		msg "${BRED} ERROR: Cannot safely remove '${YELLOW}${distro_name}${BRED}' - mount points still active!${RST}"
 		msg "${YELLOW}The following mount points could not be unmounted:${RST}"
 		echo "$remaining_mounts" | while IFS= read -r mp; do
 			msg "  ${CYAN}${mp}${RST}"
@@ -2688,7 +2682,7 @@ command_remove() {
 
 	# Ensure we don't accidentally remove wrong directories
 	if [ -z "${INSTALLED_ROOTFS_DIR}" ] || [ -z "${distro_name}" ]; then
-		msg "${BLUE}[${BRED}!${BLUE}] ${CYAN}Error: Invalid directory path. Aborting removal for safety.${RST}"
+		msg "${BLUE}[${BRED}!${BLUE}] ${CYAN} ERROR: Invalid directory path. Aborting removal for safety.${RST}"
 		return 1
 	fi
 
@@ -2698,7 +2692,7 @@ command_remove() {
 		# Safe path - within our runtime directory
 		;;
 	*)
-		msg "${BLUE}[${BRED}!${BLUE}] ${CYAN}Error: Unsafe directory path detected. Aborting removal.${RST}"
+		msg "${BLUE}[${BRED}!${BLUE}] ${CYAN} ERROR: Unsafe directory path detected. Aborting removal.${RST}"
 		return 1
 		;;
 	esac
@@ -2763,7 +2757,7 @@ command_unmount() {
 			;;
 		-*)
 			msg
-			msg "${BRED}Error: got unknown option '${YELLOW}${1}${BRED}'.${RST}"
+			msg "${BRED} ERROR: got unknown option '${YELLOW}${1}${BRED}'.${RST}"
 			command_unmount_help
 			return 1
 			;;
@@ -2771,14 +2765,14 @@ command_unmount() {
 			if [ -z "$distro_name" ]; then
 				if [ -z "$1" ]; then
 					msg
-					msg "${BRED}Error: distribution alias argument should not be empty.${RST}"
+					msg "${BRED} ERROR: distribution alias argument should not be empty.${RST}"
 					command_unmount_help
 					return 1
 				fi
 				distro_name="$1"
 			else
 				msg
-				msg "${BRED}Error: got excessive positional argument '${YELLOW}${1}${BRED}'. Note that distribution can be specified only once.${RST}"
+				msg "${BRED} ERROR: got excessive positional argument '${YELLOW}${1}${BRED}'. Note that distribution can be specified only once.${RST}"
 				command_unmount_help
 				return 1
 			fi
@@ -2790,7 +2784,7 @@ command_unmount() {
 	# Check if distribution name is provided
 	if [ -z "$distro_name" ]; then
 		msg
-		msg "${BRED}Error: distribution alias is not specified.${RST}"
+		msg "${BRED} ERROR: distribution alias is not specified.${RST}"
 		command_unmount_help
 		return 1
 	fi
@@ -2808,7 +2802,7 @@ command_unmount() {
 
 	if [ "$distro_found" = "false" ]; then
 		msg
-		msg "${BRED}Error: unknown distribution '${YELLOW}${distro_name}${BRED}'.${RST}"
+		msg "${BRED} ERROR: unknown distribution '${YELLOW}${distro_name}${BRED}'.${RST}"
 		msg
 		msg "${CYAN}Run '${GREEN}${PROGRAM_NAME} list${CYAN}' to see available distributions.${RST}"
 		msg
@@ -2818,7 +2812,7 @@ command_unmount() {
 	# Check if distribution is installed
 	if [ ! -d "${INSTALLED_ROOTFS_DIR}/${distro_name}" ]; then
 		msg
-		msg "${BRED}Error: distribution '${YELLOW}${distro_name}${BRED}' is not installed.${RST}"
+		msg "${BRED} ERROR: distribution '${YELLOW}${distro_name}${BRED}' is not installed.${RST}"
 		msg
 		return 1
 	fi
@@ -2875,7 +2869,7 @@ command_unmount_system_points() {
 		if [ -n "$PM_OUTPUT" ]; then
 			PM_UID=$(echo "$PM_OUTPUT" | busybox sed 's/.*uid:\([0-9]*\).*/\1/')
 			if [ "$ORIGINAL_UID" != "$PM_UID" ]; then
-				msg "${YELLOW} Warning: Termux UID mismatch detected.${RST}"
+				msg "${YELLOW} WARNING: Termux UID mismatch detected.${RST}"
 				msg "${YELLOW} You might faced issue in Termux X11${RST}"
 			fi
 		fi
@@ -2902,7 +2896,7 @@ command_unmount_system_points() {
 		if [ -n "$PM_OUTPUT" ]; then
 			PM_UID=$(echo "$PM_OUTPUT" | busybox sed 's/.*uid:\([0-9]*\).*/\1/')
 			if [ "$ORIGINAL_UID" != "$PM_UID" ]; then
-				msg "${YELLOW} Warning: Termux UID mismatch detected.${RST}"
+				msg "${YELLOW} WARNING: Termux UID mismatch detected.${RST}"
 				msg "${YELLOW} You might faced issue login in Termux${RST}"
 			fi
 		fi
@@ -3111,7 +3105,7 @@ if [ $# -ge 1 ]; then
 		;;
 	*)
 		msg
-		msg "${BRED}Error: unknown command '${YELLOW}${1}${BRED}'.${RST}"
+		msg "${BRED} ERROR: unknown command '${YELLOW}${1}${BRED}'.${RST}"
 		msg
 		msg "${CYAN}View supported commands by: ${GREEN}${PROGRAM_NAME} help${CYAN}${RST}"
 		msg
@@ -3120,6 +3114,6 @@ if [ $# -ge 1 ]; then
 	esac
 else
 	msg
-	msg "${BRED}Error: no command provided.${RST}"
+	msg "${BRED} ERROR: no command provided.${RST}"
 	command_help
 fi
