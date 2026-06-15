@@ -2,33 +2,33 @@
   "distros": [
     {
       "name": "alpine",
-      "version": "3.23.4",
+      "version": "3.24.1",
       "supported_arch": [
         "aarch64",
         "arm"
       ],
-      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/alpine/alpine-aarch64-3.23.4.tar.xz",
-      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/alpine/alpine-arm-3.23.4.tar.xz"
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/alpine/alpine-aarch64-3.24.1.tar.xz",
+      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/alpine/alpine-arm-3.24.1.tar.xz"
     },
     {
       "name": "archlinux",
-      "version": "2026.05.01",
+      "version": "2026.06.01",
       "supported_arch": [
         "aarch64",
         "arm"
       ],
-      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/archlinux/archlinux-aarch64-2026.05.01.tar.xz",
-      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/archlinux/archlinux-arm-2026.05.01.tar.xz"
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/archlinux/archlinux-aarch64-2026.06.01.tar.xz",
+      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/archlinux/archlinux-arm-2026.06.01.tar.xz"
     },
     {
       "name": "debian",
-      "version": "13.4",
+      "version": "13.5",
       "supported_arch": [
         "aarch64",
         "arm"
       ],
-      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/debian/debian-aarch64-13.4.tar.xz",
-      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/debian/debian-arm-13.4.tar.xz"
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/debian/debian-aarch64-13.5.tar.xz",
+      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/debian/debian-arm-13.5.tar.xz"
     },
     {
       "name": "fedora",
