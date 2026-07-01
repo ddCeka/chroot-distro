@@ -1,4 +1,4 @@
-dist_version="2026.1"
+dist_version="2026.2"
 
 bootstrap_distribution() {
 	sudo rm -f "${ROOTFS_DIR}"/kali-*.tar.xz
