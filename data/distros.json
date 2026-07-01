@@ -68,11 +68,11 @@
     },
     {
       "name": "rocky",
-      "version": "10.1",
+      "version": "10.2",
       "supported_arch": [
         "aarch64"
       ],
-      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/rocky/rocky-aarch64-10.1.tar.xz",
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/rocky/rocky-aarch64-10.2.tar.xz",
       "arm_url": ""
     },
     {
