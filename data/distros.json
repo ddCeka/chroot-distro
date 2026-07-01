@@ -41,11 +41,11 @@
     },
     {
       "name": "kali",
-      "version": "2026.1",
+      "version": "2026.2",
       "supported_arch": [
         "aarch64"
       ],
-      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/kali/kali-aarch64-2026.1.tar.xz",
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/kali/kali-aarch64-2026.2.tar.xz",
       "arm_url": ""
     },
     {
