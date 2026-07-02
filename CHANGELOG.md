@@ -1,5 +1,20 @@
 # Changelog
 
+### v1.5.8
+
+- kali: bump to 2026.2
+- manjaro: bump to 20260622
+- rockylinux: bump to 10.2
+- Merge pull request #14 from ddCeka/dependabot/github_actions/actions/checkout-7
+- Merge pull request #11 from ddCeka/update/alpine/3.24.1
+- Merge pull request #10 from ddCeka/update/debian/13.5
+- Merge pull request #8 from ddCeka/update/archlinux/2026.06.01
+- debian: bump to 13.5
+- archlinux: bump to 2026.06.01
+- alpine: bump to 3.24.1
+- cleanup script
+- update readme
+
 ### v1.5.7
 
 - Merge pull request #4 from ddCeka/dependabot/github_actions/actions/upload-artifact-7

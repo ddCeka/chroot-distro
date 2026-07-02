@@ -39,7 +39,7 @@ else
 	RST=''
 fi
 
-PROGRAM_VERSION="1.5.7"
+PROGRAM_VERSION="1.5.8"
 
 REPO_OWNER="ddCeka"
 
