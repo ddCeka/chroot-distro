@@ -22,13 +22,13 @@
     },
     {
       "name": "debian",
-      "version": "13.5",
+      "version": "13.6",
       "supported_arch": [
         "aarch64",
         "arm"
       ],
-      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/debian/debian-aarch64-13.5.tar.xz",
-      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/debian/debian-arm-13.5.tar.xz"
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/debian/debian-aarch64-13.6.tar.xz",
+      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/debian/debian-arm-13.6.tar.xz"
     },
     {
       "name": "fedora",
