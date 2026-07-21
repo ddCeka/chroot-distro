@@ -1,5 +1,10 @@
 # Changelog
 
+### v1.5.9
+
+- manjaro: bump to 20260713
+- archlinux: bump to 2026.07.01
+
 ### v1.5.8
 
 - kali: bump to 2026.2

@@ -1,6 +1,6 @@
 {
-  "version": "1.5.8",
-  "versionCode": 36,
-  "zipUrl": "https://github.com/ddCeka/chroot-distro/releases/download/1.5.8/chroot-distro.zip",
+  "version": "1.5.9",
+  "versionCode": 38,
+  "zipUrl": "https://github.com/ddCeka/chroot-distro/releases/download/1.5.9/chroot-distro.zip",
   "changelog": "https://raw.githubusercontent.com/ddCeka/chroot-distro/master/CHANGELOG.md"
 }

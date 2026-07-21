@@ -1,7 +1,7 @@
 id=chroot-distro
 name=chroot-distro
-version=1.5.8
-versionCode=36
+version=1.5.9
+versionCode=38
 author=@ddCeka
 description=Install Gnu/Linux distributions on Android
 updateJson=https://raw.githubusercontent.com/ddCeka/chroot-distro/refs/heads/master/module/update.json
