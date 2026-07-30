@@ -1,6 +1,8 @@
 
 ## Note
 
+ref: https://github.com/termux/termux-packages/pull/30781 
+
 #### this is a personal fork for personal use, as well as backup from before the original source changed into python package.
 
 > [!TIP]
