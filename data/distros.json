@@ -2,13 +2,13 @@
   "distros": [
     {
       "name": "alpine",
-      "version": "3.24.1",
+      "version": "3.24.2",
       "supported_arch": [
         "aarch64",
         "arm"
       ],
-      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/alpine/alpine-aarch64-3.24.1.tar.xz",
-      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/alpine/alpine-arm-3.24.1.tar.xz"
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/alpine/alpine-aarch64-3.24.2.tar.xz",
+      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/alpine/alpine-arm-3.24.2.tar.xz"
     },
     {
       "name": "archlinux",
