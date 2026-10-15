@@ -1,4 +1,4 @@
-dist_version="2026.09.01"
+dist_version="2026.10.01"
 
 bootstrap_distribution() {
 	sudo rm -f "${ROOTFS_DIR}"/archlinux-*.tar.xz
