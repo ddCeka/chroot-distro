@@ -87,13 +87,13 @@
     },
     {
       "name": "ubuntu",
-      "version": "25.10",
+      "version": "26.04",
       "supported_arch": [
         "aarch64",
         "arm"
       ],
-      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/ubuntu/ubuntu-aarch64-25.10.tar.xz",
-      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/ubuntu/ubuntu-arm-25.10.tar.xz"
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/ubuntu/ubuntu-aarch64-26.04.tar.xz",
+      "arm_url": "https://github.com/ddCeka/chroot-distro/releases/download/ubuntu/ubuntu-arm-26.04.tar.xz"
     },
     {
       "name": "void",
