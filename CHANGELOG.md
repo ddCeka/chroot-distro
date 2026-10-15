@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.6.1
+
+- manjaro: bump to 20260928
+
 ### v1.6.0
 
 - modified: README.md
