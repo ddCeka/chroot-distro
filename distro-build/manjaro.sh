@@ -1,7 +1,7 @@
-dist_version="20261012"
+dist_version="20261102"
 
 bootstrap_distribution() {
-	sudo rm -f "${ROOTFS_DIR}"/manjaro-*.tar.gz
+	sudo rm -f "${ROOTFS_DIR}"/manjaro-*.tar.xz
 
 	if should_skip_arch "aarch64"; then
 		echo "[*] Skipping architecture: aarch64"
@@ -35,6 +35,6 @@ bootstrap_distribution() {
 
 	sudo rm -f "${WORKDIR:?}"/manjaro-aarch64/var/cache/pacman/pkg/* || true
 
-	archive_rootfs "${ROOTFS_DIR}/manjaro-aarch64-${dist_version}.tar.gz" \
+	archive_rootfs "${ROOTFS_DIR}/manjaro-aarch64-${dist_version}.tar.xz" \
 		"manjaro-aarch64"
 }
