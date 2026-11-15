@@ -52,11 +52,11 @@
     },
     {
       "name": "manjaro",
-      "version": "20261012",
+      "version": "20261102",
       "supported_arch": [
         "aarch64"
       ],
-      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/manjaro/manjaro-aarch64-20261012.tar.xz",
+      "aarch64_url": "https://github.com/ddCeka/chroot-distro/releases/download/manjaro/manjaro-aarch64-20261102.tar.xz",
       "arm_url": ""
     },
     {
