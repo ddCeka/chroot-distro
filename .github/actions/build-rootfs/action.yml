@@ -18,7 +18,7 @@ runs:
               sudo apt-get install -y \
                 wget curl jq xz-utils \
                 mmdebstrap \
-                qemu-user-static \
+                qemu-user-binfmt \
                 binfmt-support \
                 git sudo tar \
                 zstd \
@@ -34,8 +34,8 @@ runs:
               curl -L -o /tmp/trisquelkey.deb https://archive.trisquel.org/trisquel/pool/main/t/trisquel-keyring/trisquel-keyring_2023.02.07_all.deb
               sudo apt install -yq /tmp/trisquelkey.deb || true
 
-              # Register binfmt
-              sudo update-binfmts --enable
+              # Register binfmt (supports both systemd-binfmt and legacy binfmt-support)
+              sudo systemctl restart systemd-binfmt || sudo update-binfmts --enable
 
         - name: Build
           shell: bash
