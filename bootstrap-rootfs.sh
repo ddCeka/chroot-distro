@@ -76,8 +76,9 @@ archive_rootfs() {
 		echo "[!] Warning: serviced.py not found at $serviced_path"
 	fi
 
+	# Clean any leftover device nodes and ensure /tmp & /var/tmp keep sticky bit
 	sudo find "${2:?}/dev" -mindepth 1 -delete
-	sudo find "${2}" -type d -perm -400 -print0 | xargs -0 sudo chmod 755
+	sudo chmod 1777 "${2}/tmp" "${2}/var/tmp" 2>/dev/null || true
 
 	sudo rm -f "${1:?}.tmp"
 	sudo tar \
@@ -94,7 +95,7 @@ archive_rootfs() {
 		--xz \
 		--file="${1}.tmp" \
 		"$2"
-	sudo chown $(id -un):$(id -gn) "${1}.tmp"
+	sudo chown "$(id -un):$(id -gn)" "${1}.tmp"
 	mv "${1}.tmp" "${1}"
 }
 
@@ -134,6 +135,6 @@ for distro in ${DISTRIBUTIONS}; do
 	bootstrap_distribution
 
 	# Cleanup variables and functions
-	unset dist_name dist_version
+	unset dist_name dist_version dist_codename
 	unset -f bootstrap_distribution
 done
