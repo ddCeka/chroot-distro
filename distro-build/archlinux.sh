@@ -18,35 +18,37 @@ bootstrap_distribution() {
 				--output "${WORKDIR}/archlinux-${arch}.tar.gz" \
 				"http://os.archlinuxarm.org/os/ArchLinuxARM-${arch}-latest.tar.gz"
 
-			sudo rm -rf "${WORKDIR}/archlinux-$(translate_arch "$arch")"
-			sudo mkdir -m 755 "${WORKDIR}/archlinux-$(translate_arch "$arch")"
-			sudo tar -zxp --acls --xattrs --xattrs-include='*' \
+			target_dir="${WORKDIR}/archlinux-$(translate_arch "$arch")"
+			sudo rm -rf "${target_dir}"
+			sudo mkdir -m 755 "${target_dir}"
+			sudo tar -zxp --warning=no-unknown-keyword --acls --xattrs --xattrs-include='*' \
 				-f "${WORKDIR}/archlinux-${arch}.tar.gz" \
-				-C "${WORKDIR}/archlinux-$(translate_arch "$arch")"
+				-C "${target_dir}"
 
-			# Disable pacman sandbox before any pacman operations (Landlock not supported in CI)
-			sudo sed -i 's/#DisableSandbox/DisableSandbox/' "${WORKDIR}/archlinux-$(translate_arch "$arch")/etc/pacman.conf"
+			# Disable pacman sandbox before any pacman operations (Landlock not supported in CI/QEMU)
+			sudo sed -i 's/#DisableSandbox/DisableSandbox/' "${target_dir}/etc/pacman.conf"
 
 			cat <<-EOF | sudo unshare -mpf bash -e -
-				rm -f "${WORKDIR}/archlinux-$(translate_arch "$arch")/etc/resolv.conf"
-				echo "nameserver 1.1.1.1" > "${WORKDIR}/archlinux-$(translate_arch "$arch")/etc/resolv.conf"
-				mount --bind "${WORKDIR}/archlinux-$(translate_arch "$arch")/" "${WORKDIR}/archlinux-$(translate_arch "$arch")/"
-				mount --bind /dev "${WORKDIR}/archlinux-$(translate_arch "$arch")/dev"
-				mount --bind /proc "${WORKDIR}/archlinux-$(translate_arch "$arch")/proc"
-				mount --bind /sys "${WORKDIR}/archlinux-$(translate_arch "$arch")/sys"
-				chroot "${WORKDIR}/archlinux-$(translate_arch "$arch")" pacman-key --init
-				chroot "${WORKDIR}/archlinux-$(translate_arch "$arch")" pacman-key --populate archlinuxarm
+				rm -f "${target_dir}/etc/resolv.conf"
+				echo "nameserver 1.1.1.1" > "${target_dir}/etc/resolv.conf"
+				mount --bind "${target_dir}/" "${target_dir}/"
+				mount --rbind /dev "${target_dir}/dev"
+				mount --make-rslave "${target_dir}/dev"
+				mount --bind /proc "${target_dir}/proc"
+				mount --bind /sys "${target_dir}/sys"
+				chroot "${target_dir}" pacman-key --init
+				chroot "${target_dir}" pacman-key --populate archlinuxarm
 
 				# Remove kernel and firmware to save space (not needed in chroot)
 				if [ "$arch" = "aarch64" ]; then
-					chroot "${WORKDIR}/archlinux-$(translate_arch "$arch")" pacman -Rnsc --noconfirm linux-aarch64 linux-firmware || true
+					chroot "${target_dir}" pacman -Rnsc --noconfirm linux-aarch64 linux-firmware || true
 				else
-					chroot "${WORKDIR}/archlinux-$(translate_arch "$arch")" pacman -Rnsc --noconfirm linux-armv7 linux-firmware || true
+					chroot "${target_dir}" pacman -Rnsc --noconfirm linux-armv7 linux-firmware || true
 				fi
 
 				# Retry upgrade in case of transient mirror 404s
 				for attempt in 1 2 3; do
-					if chroot "${WORKDIR}/archlinux-$(translate_arch "$arch")" pacman -Syyu --noconfirm; then
+					if chroot "${target_dir}" pacman -Syyu --noconfirm; then
 						break
 					fi
 					if [ "\$attempt" -eq 3 ]; then
@@ -56,7 +58,9 @@ bootstrap_distribution() {
 					echo "[*] Retry \$attempt: pacman upgrade failed, retrying in 30s..."
 					sleep 30
 				done
-				chroot "${WORKDIR}/archlinux-$(translate_arch "$arch")" pacman -S --noconfirm sudo
+				chroot "${target_dir}" pacman -S --noconfirm sudo
+				# Stop gpg-agent inside chroot so socket files don't linger during tar
+				chroot "${target_dir}" pkill -9 gpg-agent || true
 			EOF
 			;;
 		x86_64 | i686)
@@ -119,8 +123,8 @@ bootstrap_distribution() {
 			;;
 		esac
 
-		# Common Cleanup
-		sudo rm -rf "${WORKDIR:?}/archlinux-$(translate_arch "$arch")"/var/cache/pacman/pkg
+		# Keep the pkg directory intact, only remove cached archives
+		sudo rm -rf "${WORKDIR:?}/archlinux-$(translate_arch "$arch")"/var/cache/pacman/pkg/*
 
 		archive_rootfs "${ROOTFS_DIR}/archlinux-$(translate_arch "$arch")-${dist_version}.tar.xz" \
 			"archlinux-$(translate_arch "$arch")"

@@ -11,15 +11,18 @@ bootstrap_distribution() {
 			continue
 		fi
 
-		sudo rm -rf "${WORKDIR}/debian-${dist_codename}-$(translate_arch "$arch")"
-		sudo mmdebstrap \
+		target_dir="${WORKDIR}/debian-${dist_codename}-$(translate_arch "$arch")"
+		sudo rm -rf "${target_dir}"
+
+		sudo DEBIAN_FRONTEND=noninteractive mmdebstrap \
 			--architectures=${arch} \
 			--variant=minbase \
 			--components="main,contrib" \
 			--include="ca-certificates,locales,sudo" \
 			--format=directory \
 			"${dist_codename}" \
-			"${WORKDIR}/debian-${dist_codename}-$(translate_arch "$arch")"
+			"${target_dir}"
+
 		archive_rootfs "${ROOTFS_DIR}/debian-$(translate_arch "$arch")-${dist_version}.tar.xz" \
 			"debian-${dist_codename}-$(translate_arch "$arch")"
 	done

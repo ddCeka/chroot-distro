@@ -20,7 +20,7 @@ bootstrap_distribution() {
 
 		sudo mkdir -m 755 "${WORKDIR}/fedora-$(translate_arch "$arch")"
 		for layer in ${oci_layers}; do
-			sudo tar -zxp --acls --xattrs --xattrs-include='*' \
+			sudo tar -xp --acls --xattrs --xattrs-include='*' \
 				-f "${WORKDIR}/fedora-tmp/blobs/sha256/${layer}" \
 				-C "${WORKDIR}/fedora-$(translate_arch "$arch")"
 		done
